@@ -1,0 +1,10 @@
+#!/bin/bash
+executable   = run_randomize.sh
+universe     = vanilla
+output       = /home/jmsardain/CalibPU/Resample/MakeJets/SendJobs/logfiles/job_$(ClusterId)_randomize.out
+error        = /home/jmsardain/CalibPU/Resample/MakeJets/SendJobs/logfiles/job_$(ClusterId)_randomize.err
+log          = /home/jmsardain/CalibPU/Resample/MakeJets/SendJobs/logfiles/job_$(ClusterId)_randomize.log
+request_memory = 50GB
++JobFlavour  = "nextweek"
+
+queue
