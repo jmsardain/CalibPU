@@ -2,3 +2,4 @@
 *.jpg
 *.eps
 *.pdf
+.ipynb_checkpoints/
