@@ -202,40 +202,6 @@ def main():
             f["JetTree"] = branches
 
         print("Saved ROOT file to:", root_path)
-        # branches = {
-        #     "eventNumber":                  Xfinal[:, 0].astype(np.int64),
-        #     "jetCnt":                       Xfinal[:, 1].astype(np.int32),
-        #     "jetAreaE":                     Xfinal[:, 2].astype(np.float32),
-        #     "jetAreaPt":                    Xfinal[:, 3].astype(np.float32),
-        #     "jetRawE":                      Xfinal[:, 4].astype(np.float32),
-        #     "jetRawPt":                     Xfinal[:, 5].astype(np.float32),
-        #     "truthJetE":                    Xfinal[:, 6].astype(np.float32),
-        #     "truthJetPt":                   Xfinal[:, 7].astype(np.float32),
-        #     "jetCalE":                      Xfinal[:, 8].astype(np.float32),
-        #     "jetCalPt":                     Xfinal[:, 9].astype(np.float32),
-        #     "cluster_ENG_CALIB_TOT":        Xfinal[:, 10].astype(np.float32),
-        #     "raw_clusterE":                 Xfinal[:, 11].astype(np.float32),
-        #     "raw_cluster_CENTER_LAMBDA":    Xfinal[:, 12].astype(np.float32),
-        #     "raw_cluster_FIRST_ENG_DENS":   Xfinal[:, 13].astype(np.float32),
-        #     "raw_cluster_SECOND_TIME":      Xfinal[:, 14].astype(np.float32),
-        #     "raw_cluster_SIGNIFICANCE":     Xfinal[:, 15].astype(np.float32),
-        #     "raw_cluster_CENTER_MAG":       Xfinal[:, 16].astype(np.float32),
-        #     "clusterPt":                    Xfinal[:, 17].astype(np.float32),
-        #     "label":                        Xfinal[:, 18].astype(np.float32),
-        #     "prediction":                   Xfinal[:, 19].astype(np.float32),
-        # }
-
-        # # Remaining columns = your features
-        # n_features = x_test.shape[1]
-        # for i in range(n_features):
-        #     branches[f"{feature_branches[i]}"] = Xfinal[:, 20 + i].astype(np.float32)
-
-        # root_path = dir_path + "/total_predictions.root"
-
-        # with uproot.recreate(root_path) as f:
-        #     f["JetTree"] = branches
-
-        # print("Saved ROOT file to:", root_path)
 
     if args.merge: 
         
