@@ -19,21 +19,15 @@ from utils import *
 
 parser = argparse.ArgumentParser(description='Perform signal injection test.')
 parser.add_argument('--train',    dest='train',    action='store_const', const=True, default=False, help='Train NN  (default: False)')
+parser.add_argument('--epoch',    dest='epoch',    type=int, default=100, help='epochs to train')
+parser.add_argument('--batch',    dest='batch',    type=int, default=2048, help='batch size')
+parser.add_argument('--lr',       dest='lr',       type=float, default=0.0001, help='learning rate')
 parser.add_argument('--test',     dest='test',     action='store_const', const=True, default=False, help='Test NN   (default: False)')
 parser.add_argument('--merge',    dest='merge',    action='store_const', const=True, default=False, help='Append label and predictions to ROOT test file    (default: False)')
 parser.add_argument('--ckpt',     dest='ckpt',     type=str, default='', help='ckpts to use')
 parser.add_argument('--outdir',   dest='outdir',   type=str, default='', help='Directory with output is stored')
 
 args = parser.parse_args()
-# def build_and_compile_model(X_train, lr):
-#     model = keras.Sequential([layers.Flatten(input_shape=(X_train.shape[1],)),
-#                                              layers.Dense(256, activation="relu"),
-#                                              layers.Dense(128, activation="relu"),
-#                                              layers.Dense(64,  activation="relu"),
-#                                              layers.Dense(64,   activation="relu"),
-#                                              layers.Dense(1,   activation='sigmoid')])
-#     model.compile(loss="binary_crossentropy", optimizer=tf.keras.optimizers.Adam(learning_rate=lr), weighted_metrics=[])
-#     return model
 
 
 
@@ -48,12 +42,7 @@ def main():
 
     path_to_train = '/data/jmsardain/CalibPU/datasets/pu/dataset_train.npy'
     path_to_test  = '/data/jmsardain/CalibPU/datasets/pu/dataset_test.npy'
-    
-    # features_train = '/data/jmsardain/CalibPU/datasets/pu/features_train.npy'
-    # features_test  = '/data/jmsardain/CalibPU/datasets/pu/features_test.npy'
-    
-    # labels_train = '/data/jmsardain/CalibPU/datasets/pu/labels_train.npy'
-    # labels_test  = '/data/jmsardain/CalibPU/datasets/pu/labels_test.npy'
+
 
     if args.train: 
 
@@ -78,16 +67,16 @@ def main():
         
         ## Get DataLoaders
         train_dataset = TensorDataset(torch.tensor(x_train, dtype=torch.float32), torch.tensor(y_train, dtype=torch.float32))
-        train_loader = DataLoader(train_dataset, batch_size=2048, shuffle=True)
+        train_loader = DataLoader(train_dataset, batch_size=args.batch, shuffle=True)
 
         val_dataset = TensorDataset(torch.tensor(x_val, dtype=torch.float32), torch.tensor(y_val, dtype=torch.float32))
-        val_loader = DataLoader(val_dataset, batch_size=2048, shuffle=False)
+        val_loader = DataLoader(val_dataset, batch_size=args.batch, shuffle=False)
 
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         model = PUMitigationModel(x_train.shape[1])
-        optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
         print('Start training')
         train_loss = []
@@ -95,7 +84,7 @@ def main():
 
         model.to(device)
 
-        for epoch in range(100):
+        for epoch in range(args.epoch):
             print("Epoch:{}".format(epoch+1))
             train_loss.append(train(train_loader, model, device, optimizer))
             val_loss.append(validate(val_loader, model, device))
@@ -150,7 +139,7 @@ def main():
         path_to_ckpt = args.ckpt
         model.load_state_dict(torch.load(path_to_ckpt))
         print('I am here 2')
-        # df = test(test_loader, model, device, dir_path)
+
         labels_test, nodes_out = test(test_loader, model, device, dir_path)
 
         eventNumber                = dataset_test[:, 0]
@@ -172,18 +161,6 @@ def main():
         raw_cluster_CENTER_MAG     = dataset_test[:, 16]
         clusterPt                  = dataset_test[:, 17]
 
-        # Xfinal = np.column_stack([
-        #                         eventNumber, jetCnt,
-        #                         jetAreaE, jetAreaPt, 
-        #                         jetRawE, jetRawPt, truthJetE, truthJetPt, jetCalE, jetCalPt, 
-        #                         cluster_ENG_CALIB_TOT,
-        #                         raw_clusterE, raw_cluster_CENTER_LAMBDA, raw_cluster_FIRST_ENG_DENS, raw_cluster_SECOND_TIME, raw_cluster_SIGNIFICANCE, raw_cluster_CENTER_MAG,
-        #                         clusterPt,
-        #                         labels_test, nodes_out, 
-        #                         x_test
-        #                         ])
-        
-        # np.save(dir_path+'/total_predictions.npy', Xfinal)
 
         Xfinal_out_only = np.column_stack([
                                 eventNumber, jetCnt,
@@ -202,44 +179,9 @@ def main():
             f["JetTree"] = branches
 
         print("Saved ROOT file to:", root_path)
-        # branches = {
-        #     "eventNumber":                  Xfinal[:, 0].astype(np.int64),
-        #     "jetCnt":                       Xfinal[:, 1].astype(np.int32),
-        #     "jetAreaE":                     Xfinal[:, 2].astype(np.float32),
-        #     "jetAreaPt":                    Xfinal[:, 3].astype(np.float32),
-        #     "jetRawE":                      Xfinal[:, 4].astype(np.float32),
-        #     "jetRawPt":                     Xfinal[:, 5].astype(np.float32),
-        #     "truthJetE":                    Xfinal[:, 6].astype(np.float32),
-        #     "truthJetPt":                   Xfinal[:, 7].astype(np.float32),
-        #     "jetCalE":                      Xfinal[:, 8].astype(np.float32),
-        #     "jetCalPt":                     Xfinal[:, 9].astype(np.float32),
-        #     "cluster_ENG_CALIB_TOT":        Xfinal[:, 10].astype(np.float32),
-        #     "raw_clusterE":                 Xfinal[:, 11].astype(np.float32),
-        #     "raw_cluster_CENTER_LAMBDA":    Xfinal[:, 12].astype(np.float32),
-        #     "raw_cluster_FIRST_ENG_DENS":   Xfinal[:, 13].astype(np.float32),
-        #     "raw_cluster_SECOND_TIME":      Xfinal[:, 14].astype(np.float32),
-        #     "raw_cluster_SIGNIFICANCE":     Xfinal[:, 15].astype(np.float32),
-        #     "raw_cluster_CENTER_MAG":       Xfinal[:, 16].astype(np.float32),
-        #     "clusterPt":                    Xfinal[:, 17].astype(np.float32),
-        #     "label":                        Xfinal[:, 18].astype(np.float32),
-        #     "prediction":                   Xfinal[:, 19].astype(np.float32),
-        # }
-
-        # # Remaining columns = your features
-        # n_features = x_test.shape[1]
-        # for i in range(n_features):
-        #     branches[f"{feature_branches[i]}"] = Xfinal[:, 20 + i].astype(np.float32)
-
-        # root_path = dir_path + "/total_predictions.root"
-
-        # with uproot.recreate(root_path) as f:
-        #     f["JetTree"] = branches
-
-        # print("Saved ROOT file to:", root_path)
 
     if args.merge: 
-        
-        # Xfinal_out_only = np.load(dir_path+'/total_predictions_only.npy')
+
         Xfinal_out_only = np.load(dir_path+'/total_predictions_only.npy')
 
         infile   = "/data/jmsardain/CalibPU/datasets/pu/JetTree_all_test.root"
