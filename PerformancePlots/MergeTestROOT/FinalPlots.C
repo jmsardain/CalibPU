@@ -263,6 +263,8 @@ void FinalPlots::Loop(){
    h_Edep_median->Draw("HSAME");
    h_labelsig_median->Draw("HSAME");
    h_ml_median->Draw("HSAME");
+   h_area_median->SetXTitle("E [GeV]");
+   h_area_median->SetYTitle("Jet energy response, R_{E}");
    lMed->Draw("SAME");
    cMedian->SaveAs("./median.png");
 
@@ -273,6 +275,8 @@ void FinalPlots::Loop(){
    h_area_iqr->GetYaxis()->SetRangeUser(0, 2);
    h_area_iqr->GetXaxis()->SetRangeUser(10, 2000); 
    h_area_iqr->Draw("H");
+   h_area_iqr->SetXTitle("E [GeV]");
+   h_area_iqr->SetYTitle("Jet energy resolution, #sigma(r_{E})");
    h_Edep_iqr->Draw("HSAME");
    h_labelsig_iqr->Draw("HSAME");
    h_ml_iqr->Draw("HSAME");
