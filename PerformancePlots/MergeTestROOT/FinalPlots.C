@@ -8,6 +8,8 @@
 #include <TColor.h>
 #include <TMath.h>
 #include <vector>
+#include <utility>
+#include <cmath>
 
 double funcScore(double score){
    // return score;
@@ -48,7 +50,10 @@ double get_percentile(std::vector<double>& v, double percentile) {
 }
 
 
-void FillHisto_MedianIQR(TH1* hmedian, TH1* hiqr, TH2* h2){
+std::pair<TH1D*, TH1D*>FillHisto_MedianIQR(Int_t Nbins, const Double_t* bins, const TH2D* h2){ 
+
+   TH1D* hmedian = new TH1D("", "", Nbins, bins);
+   TH1D* hiqr    = new TH1D("", "", Nbins, bins);
 
    for(int ibinx = 1; ibinx <= h2->GetNbinsX(); ++ibinx) {
       std::vector<double> values;
@@ -65,7 +70,26 @@ void FillHisto_MedianIQR(TH1* hmedian, TH1* hiqr, TH2* h2){
       hiqr->SetBinContent(ibinx, iqr);
       values.clear();
    }
+   
+   return {hmedian, hiqr};
+   
+
 }
+
+
+std::vector<double> LogBins(double xmin_log10, double xmax_log10, int nbins){
+   
+   ////// 
+   std::vector<double> bins(nbins + 1);
+
+   const double width = (xmax_log10 - xmin_log10) / nbins;
+
+   for (int i = 0; i <= nbins; ++i) {
+      bins[i] = std::pow(10.0, xmin_log10 + i * width);
+   }
+   return bins;
+}
+
 
 void FinalPlots::Loop(){
 
@@ -108,12 +132,38 @@ void FinalPlots::Loop(){
        452.8975799 , 472.06304126, 492.03953568, 512.86138399,
        534.5643594 , 557.18574893, 580.76441752, 605.34087475,
        630.95734448};
+   
 
+   // 
+   const int Nbins_E = 100;
+   auto bins_E = LogBins(-3.0, 2.0, Nbins_E);
 
    TH2D* h2_area     = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
    TH2D* h2_Edep     = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
    TH2D* h2_labelsig = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
    TH2D* h2_ml       = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
+
+   ////////////////////////////
+   TH2D* h2_Edep_Eem_all        = new TH2D("", "", Nbins, bins_E.data(), Nbins, bins_E.data());
+   TH2D* h2_Edep_Eem_signal     = new TH2D("", "", Nbins, bins_E.data(), Nbins, bins_E.data());
+   TH2D* h2_Edep_Eem_pileup     = new TH2D("", "", Nbins, bins_E.data(), Nbins, bins_E.data());
+
+   /// signal 
+   TH2D* h2_Edep_signal   = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
+   TH2D* h2_Eem_signal    = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
+   TH2D* h2_long_signal   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_lat_signal    = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_isol_signal   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_time_signal   = new TH2D("", "", 100, -50, 50, 100, 0, 1);
+
+   /// pileup 
+   TH2D* h2_Edep_pileup   = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
+   TH2D* h2_Eem_pileup    = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
+   TH2D* h2_long_pileup   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_lat_pileup    = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_isol_pileup   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_time_pileup   = new TH2D("", "", 100, -50, 50, 100, 0, 1);
+
    ////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////
    if (fChain == 0) return;
@@ -147,8 +197,30 @@ void FinalPlots::Loop(){
          // sum cluster (score function)
          sum_ClusE_ml += clusterE[i] * funcScore(nodes_out[i]); 
          
-         if (labels_test[i] == 1) { hScore_signal->Fill(nodes_out[i]); }
-         if (labels_test[i] == 0) { hScore_pileup->Fill(nodes_out[i]); }
+         h2_Edep_Eem_all->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i]); 
+
+         if (labels_test[i] == 1) { 
+            hScore_signal->Fill(nodes_out[i]); 
+            h2_Edep_Eem_signal->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i]); 
+            h2_Edep_signal->Fill(cluster_ENG_CALIB_TOT[i], nodes_out[i]); 
+            h2_Eem_signal->Fill(clusterE[i], nodes_out[i]); 
+            h2_long_signal->Fill(cluster_LONGITUDINAL[i], nodes_out[i]); 
+            h2_lat_signal->Fill(cluster_LATERAL[i], nodes_out[i]); 
+            h2_isol_signal->Fill(cluster_ISOLATION[i], nodes_out[i]);   
+            h2_time_signal->Fill(cluster_time[i], nodes_out[i]);   
+         }
+         if (labels_test[i] == 0) { 
+            hScore_pileup->Fill(nodes_out[i]); 
+            h2_Edep_Eem_pileup->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i]); 
+            h2_Edep_pileup->Fill(cluster_ENG_CALIB_TOT[i], nodes_out[i]); 
+            h2_Eem_pileup->Fill(clusterE[i], nodes_out[i]); 
+            h2_long_pileup->Fill(cluster_LONGITUDINAL[i], nodes_out[i]); 
+            h2_lat_pileup->Fill(cluster_LATERAL[i], nodes_out[i]); 
+            h2_isol_pileup->Fill(cluster_ISOLATION[i], nodes_out[i]);   
+            h2_time_pileup->Fill(cluster_time[i], nodes_out[i]);   
+
+         }
+
       }
       hSumClusterE->Fill(sumClusE_EM);
       // std::cout << " jetRawE: " << jetRawE
@@ -162,122 +234,113 @@ void FinalPlots::Loop(){
 
    }
 
-   TCanvas*c = new TCanvas("", "", 500, 500);
-   c->SetLogy();
-   hScore_signal->SetLineColor(kBlue);
-   hScore_pileup->SetLineColor(kOrange);
+   // Get median and IQR from 2D Plots 
+   auto [h_area_median,     h_area_iqr]     = FillHisto_MedianIQR(Nbins, bins, h2_area);
+   auto [h_Edep_median,     h_Edep_iqr]     = FillHisto_MedianIQR(Nbins, bins, h2_Edep);
+   auto [h_labelsig_median, h_labelsig_iqr] = FillHisto_MedianIQR(Nbins, bins, h2_labelsig);
+   auto [h_ml_median,       h_ml_iqr]       = FillHisto_MedianIQR(Nbins, bins, h2_ml);
 
-   hScore_signal->GetXaxis()->SetTitle("Scores");
-   hScore_signal->GetYaxis()->SetTitle("Number of clusters");
-   hScore_signal->Draw("H");
-   hScore_pileup->Draw("HSAME");
-   c->SaveAs("./scores.png");
+   TFile*fOutput = new TFile("finalHistos.root", "RECREATE"); 
+
+   hSumClusterE->Write("sumClusterE");
+   hJetRawE->Write("jetRawE");
+   hScore_signal->Write("score_signal");
+   hScore_pileup->Write("score_pileup");
+
+   /// 
+   h2_Edep_Eem_all   ->Write("Edep_Eem_all"); 
+   h2_Edep_Eem_signal->Write("Edep_Eem_signal"); 
+   h2_Edep_Eem_pileup->Write("Edep_Eem_pileup"); 
+
+   h2_Edep_signal->Write("score_Edep_signal"); 
+   h2_Eem_signal ->Write("score_Eem_signal"); 
+   h2_long_signal->Write("score_long_signal"); 
+   h2_lat_signal ->Write("score_lat_signal"); 
+   h2_isol_signal->Write("score_isol_signal"); 
+   h2_time_signal->Write("score_time_signal"); 
+
+   /// pileup 
+   h2_Edep_pileup->Write("score_Edep_pileup"); 
+   h2_Eem_pileup ->Write("score_Eem_pileup"); 
+   h2_long_pileup->Write("score_long_pileup"); 
+   h2_lat_pileup ->Write("score_lat_pileup"); 
+   h2_isol_pileup->Write("score_isol_pileup"); 
+   h2_time_pileup->Write("score_time_pileup"); 
+
+
+   //
+   h_area_median    ->Write("JetResponse_median_area"); 
+   h_Edep_median    ->Write("JetResponse_median_edep"); 
+   h_labelsig_median->Write("JetResponse_median_labelsig"); 
+   h_ml_median      ->Write("JetResponse_median_ml"); 
+   
+   h_area_iqr    ->Write("JetResponse_iqr_area"); 
+   h_Edep_iqr    ->Write("JetResponse_iqr_edep"); 
+   h_labelsig_iqr->Write("JetResponse_iqr_labelsig"); 
+   h_ml_iqr      ->Write("JetResponse_iqr_ml"); 
+
+   fOutput->Close(); 
    
    //////////////////////////////////////////////////
    //////////////////////////////////////////////////
-   hSumClusterE->SetLineColor(kRed);
-
-   TLegend* l = new TLegend(0.7, 0.7, 0.9, 0.9); 
-   l->AddEntry(hJetRawE, "E_{jet}^{EM}", "l");
-   l->AddEntry(hSumClusterE, "sum E_{clus}^{EM}", "l");
-   TCanvas* c1 = new TCanvas("", "", 800, 800);
-
-   TPad* pad1 = new TPad("pad1","pad1",0,0.3,1,1);
-   pad1->SetBottomMargin(0); 
-   pad1->Draw();
-   pad1->cd();
-   pad1->SetLogy();
-   hJetRawE->Draw("H");
-   hSumClusterE->Draw("H SAME");
-   l->Draw("SAME");
-
-   c1->cd();
-   TPad* pad2 = new TPad("pad2","pad2",0,0,1,0.3);
-   pad2->SetTopMargin(0);
-   pad2->SetBottomMargin(0.3);
-   pad2->Draw();
-   pad2->cd();
-
-   // Draw ratios
-   TH1D* hRatio = (TH1D*)hSumClusterE->Clone("hSumClusterE");
-
-   hRatio->Divide(hJetRawE);
-
-   hRatio->SetLineColor(kRed);
-
-   hRatio->SetTitle("");
-   hRatio->GetYaxis()->SetTitle("Ratio");
-   hRatio->GetYaxis()->SetNdivisions(505);
-   hRatio->GetYaxis()->SetTitleSize(0.15);
-   hRatio->GetYaxis()->SetTitleOffset(0.3);
-   hRatio->GetYaxis()->SetLabelSize(0.12);
-
-   hRatio->GetXaxis()->SetTitle("Energy");
-   hRatio->GetXaxis()->SetLabelSize(0.12);
-   hRatio->GetXaxis()->SetTitleSize(0.15);
-   hRatio->GetYaxis()->SetRangeUser(0.8, 1.2);
-
-   hRatio->Draw("H");
-
-   c1->SaveAs(("./plot.png"));
-
-   //////////////////////////////////////////////////
-   //////////////////////////////////////////////////
-   TH1D* h_area_median     = new TH1D("", "", Nbins, bins);
-   TH1D* h_Edep_median     = new TH1D("", "", Nbins, bins);
-   TH1D* h_labelsig_median = new TH1D("", "", Nbins, bins);
-   TH1D* h_ml_median       = new TH1D("", "", Nbins, bins);
-
-   TH1D* h_area_iqr     = new TH1D("", "", Nbins, bins);
-   TH1D* h_Edep_iqr     = new TH1D("", "", Nbins, bins);
-   TH1D* h_labelsig_iqr = new TH1D("", "", Nbins, bins);
-   TH1D* h_ml_iqr       = new TH1D("", "", Nbins, bins);
-
-   FillHisto_MedianIQR(h_area_median, h_area_iqr, h2_area);
-   FillHisto_MedianIQR(h_Edep_median, h_Edep_iqr, h2_Edep);
-   FillHisto_MedianIQR(h_labelsig_median, h_labelsig_iqr, h2_labelsig);
-   FillHisto_MedianIQR(h_ml_median, h_ml_iqr, h2_ml);
-
-   h_area_median->SetLineColor(kAzure + 7);
-   h_Edep_median->SetLineColor(TColor::GetColor("#FF8C00"));
-   h_labelsig_median->SetLineColor(TColor::GetColor("#008026"));
-   h_ml_median->SetLineColor(TColor::GetColor("#732982"));
-
-   h_area_iqr->SetLineColor(kAzure + 7);
-   h_Edep_iqr->SetLineColor(TColor::GetColor("#FF8C00"));
-   h_labelsig_iqr->SetLineColor(TColor::GetColor("#008026"));
-   h_ml_iqr->SetLineColor(TColor::GetColor("#732982"));
-
-   TLegend* lMed = new TLegend(0.7, 0.7, 0.9, 0.9);
-   lMed->AddEntry(h_area_median, "ATLAS", "l");
-   lMed->AddEntry(h_Edep_median, "Truth", "l");
-   lMed->AddEntry(h_labelsig_median, "Label", "l");
-   lMed->AddEntry(h_ml_median, "ML", "l");
-
-   TCanvas*cMedian = new TCanvas("", "", 500, 500);
-   cMedian->SetLogx();
  
-   h_area_median->GetYaxis()->SetRangeUser(0, 2);
-   h_area_median->GetXaxis()->SetRangeUser(10, 2000);
-   h_area_median->Draw("H");
-   h_Edep_median->Draw("HSAME");
-   h_labelsig_median->Draw("HSAME");
-   h_ml_median->Draw("HSAME");
-   lMed->Draw("SAME");
-   cMedian->SaveAs("./median.png");
+   //////////////////////////////////////////////////
+   //////////////////////////////////////////////////
+   // TH1D* h_area_median     = new TH1D("", "", Nbins, bins);
+   // TH1D* h_Edep_median     = new TH1D("", "", Nbins, bins);
+   // TH1D* h_labelsig_median = new TH1D("", "", Nbins, bins);
+   // TH1D* h_ml_median       = new TH1D("", "", Nbins, bins);
 
-   TCanvas*cIQR = new TCanvas("", "", 500, 500);
-   cIQR->SetLogx();
+   // TH1D* h_area_iqr     = new TH1D("", "", Nbins, bins);
+   // TH1D* h_Edep_iqr     = new TH1D("", "", Nbins, bins);
+   // TH1D* h_labelsig_iqr = new TH1D("", "", Nbins, bins);
+   // TH1D* h_ml_iqr       = new TH1D("", "", Nbins, bins);
+
+   // FillHisto_MedianIQR(h_area_median, h_area_iqr, h2_area);
+   // FillHisto_MedianIQR(h_Edep_median, h_Edep_iqr, h2_Edep);
+   // FillHisto_MedianIQR(h_labelsig_median, h_labelsig_iqr, h2_labelsig);
+   // FillHisto_MedianIQR(h_ml_median, h_ml_iqr, h2_ml);
+
+   // h_area_median->SetLineColor(kAzure + 7);
+   // h_Edep_median->SetLineColor(TColor::GetColor("#FF8C00"));
+   // h_labelsig_median->SetLineColor(TColor::GetColor("#008026"));
+   // h_ml_median->SetLineColor(TColor::GetColor("#732982"));
+
+   // h_area_iqr->SetLineColor(kAzure + 7);
+   // h_Edep_iqr->SetLineColor(TColor::GetColor("#FF8C00"));
+   // h_labelsig_iqr->SetLineColor(TColor::GetColor("#008026"));
+   // h_ml_iqr->SetLineColor(TColor::GetColor("#732982"));
+
+   // TLegend* lMed = new TLegend(0.7, 0.7, 0.9, 0.9);
+   // lMed->AddEntry(h_area_median, "ATLAS", "l");
+   // lMed->AddEntry(h_Edep_median, "Truth", "l");
+   // lMed->AddEntry(h_labelsig_median, "Label", "l");
+   // lMed->AddEntry(h_ml_median, "ML", "l");
+
+   // TCanvas*cMedian = new TCanvas("", "", 500, 500);
+   // cMedian->SetLogx();
+ 
+   // h_area_median->GetYaxis()->SetRangeUser(0, 2);
+   // h_area_median->GetXaxis()->SetRangeUser(10, 2000);
+   // h_area_median->Draw("H");
+   // h_Edep_median->Draw("HSAME");
+   // h_labelsig_median->Draw("HSAME");
+   // h_ml_median->Draw("HSAME");
+   // lMed->Draw("SAME");
+   // cMedian->SaveAs("./median.png");
+
+   // TCanvas*cIQR = new TCanvas("", "", 500, 500);
+   // cIQR->SetLogx();
   
 
-   h_area_iqr->GetYaxis()->SetRangeUser(0, 2);
-   h_area_iqr->GetXaxis()->SetRangeUser(10, 2000); 
-   h_area_iqr->Draw("H");
-   h_Edep_iqr->Draw("HSAME");
-   h_labelsig_iqr->Draw("HSAME");
-   h_ml_iqr->Draw("HSAME");
-   lMed->Draw("SAME");
-   cIQR->SaveAs("./iqr.png");
+   // h_area_iqr->GetYaxis()->SetRangeUser(0, 2);
+   // h_area_iqr->GetXaxis()->SetRangeUser(10, 2000); 
+   // h_area_iqr->Draw("H");
+   // h_Edep_iqr->Draw("HSAME");
+   // h_labelsig_iqr->Draw("HSAME");
+   // h_ml_iqr->Draw("HSAME");
+   // lMed->Draw("SAME");
+   // cIQR->SaveAs("./iqr.png");
    
 
    //////////////////////////////////////////////////
