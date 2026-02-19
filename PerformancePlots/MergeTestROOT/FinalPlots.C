@@ -114,6 +114,77 @@ void FinalPlots::Loop(){
    TH2D* h2_Edep     = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
    TH2D* h2_labelsig = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
    TH2D* h2_ml       = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
+    
+   TH2D* h2_sigtimescore = new TH2D("", "", Nbins, -50, 50, 100, 0, 1);
+   TH2D* h2_piltimescore = new TH2D("", "", Nbins, -50, 50, 100, 0, 1);
+   // TH2D* h2_sigtimescoretrans = new TH2D("", "", Nbins, -50, 50, 100, 0, 1);
+   // TH2D* h2_piltimescoretrans = new TH2D("", "", Nbins, -50, 50, 100, 0, 1);
+    
+   TH2D* h2_npvscore_sig = new TH2D("", "", Nbins, 0, 100, 100, 0, 1);
+   TH2D* h2_npvscore_pil = new TH2D("", "", Nbins, 0, 100, 100, 0, 1);
+   // TH2D* h2_npvscore_sigtrans = new TH2D("", "", Nbins, 0, 100, 100, 0, 1);
+   // TH2D* h2_npvscore_piltrans = new TH2D("", "", Nbins, 0, 100, 100, 0, 1);
+
+   TH2D* h2_etascore_sig = new TH2D("", "", Nbins, -3, 3, 100, 0, 1);
+   TH2D* h2_etascore_pil = new TH2D("", "", Nbins, -3, 3, 100, 0, 1);
+   // TH2D* h2_etascore_sigtrans = new TH2D("", "", Nbins, -3, 3, 100, 0, 1);
+   // TH2D* h2_etascore_piltrans = new TH2D("", "", Nbins, -3, 3, 100, 0, 1);
+
+   TH2D* h2_muscore_sig = new TH2D("", "", Nbins, 0, 100, 100, 0, 1);
+   TH2D* h2_muscore_pil = new TH2D("", "", Nbins, 0, 100, 100, 0, 1);
+   // TH2D* h2_muscore_sigtrans = new TH2D("", "", Nbins, 0, 100, 100, 0, 1);
+   // TH2D* h2_muscore_piltrans = new TH2D("", "", Nbins, 0, 100, 100, 0, 1);
+
+   TH2D* h2_lambdascore_sig = new TH2D("", "", Nbins, 0, 8000, 100, 0, 1);
+   TH2D* h2_lambdascore_pil = new TH2D("", "", Nbins, 0, 8000, 100, 0, 1);
+   // TH2D* h2_lambdascore_sigtrans = new TH2D("", "", Nbins, 0, 8000, 100, 0, 1);
+   // TH2D* h2_lambdascore_piltrans = new TH2D("", "", Nbins, 0, 8000, 100, 0, 1);
+
+   TH2D* h2_xscore_sig = new TH2D("", "", Nbins, -4000, 4000, 100, 0, 1);
+   TH2D* h2_xscore_pil = new TH2D("", "", Nbins, -4000, 4000, 100, 0, 1);
+   // TH2D* h2_xscore_sigtrans = new TH2D("", "", Nbins, -4000, 4000, 100, 0, 1);
+   // TH2D* h2_xscore_piltrans = new TH2D("", "", Nbins, -4000, 4000, 100, 0, 1);
+
+   TH2D* h2_yscore_sig = new TH2D("", "", Nbins, -4000, 4000, 100, 0, 1);
+   TH2D* h2_yscore_pil = new TH2D("", "", Nbins, -4000, 4000, 100, 0, 1);
+   // TH2D* h2_yscore_sigtrans = new TH2D("", "", Nbins, -4000, 4000, 100, 0, 1);
+   // TH2D* h2_yscore_piltrans = new TH2D("", "", Nbins, -4000, 4000, 100, 0, 1);
+
+   TH2D* h2_zscore_sig = new TH2D("", "", Nbins, 0, 6000, 100, 0, 1);
+   TH2D* h2_zscore_pil = new TH2D("", "", Nbins, 0, 6000, 100, 0, 1);
+   // TH2D* h2_zscore_sigtrans = new TH2D("", "", Nbins, 0, 6000, 100, 0, 1);
+   // TH2D* h2_zscore_piltrans = new TH2D("", "", Nbins, 0, 6000, 100, 0, 1);
+
+   TH2D* h2_rzscore1sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore1pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore2sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore2pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore3sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore3pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore4sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore4pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore5sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore5pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore6sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore6pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore7sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore7pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore8sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore8pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore9sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore9pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
+   TH2D* h2_rzscore10sig = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+   TH2D* h2_rzscore10pil = new TH2D("", "", Nbins, -6000, 6000, 100, 0, 4000);
+
    ////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////
    if (fChain == 0) return;
@@ -145,7 +216,75 @@ void FinalPlots::Loop(){
          // sum cluster (EM Scale, Label == 1, i.e. signal)
          if (labels_test[i] == 1) { sum_ClusE_label += clusterE[i]; }  
          // sum cluster (score function)
-         sum_ClusE_ml += clusterE[i] * funcScore(nodes_out[i]); 
+         sum_ClusE_ml += clusterE[i] * funcScore(nodes_out[i]);
+          
+
+         if (labels_test[i] == 1) {h2_sigtimescore->Fill(cluster_time[i], funcScore(nodes_out[i]));}
+         if (labels_test[i] == 0) {h2_piltimescore->Fill(cluster_time[i], funcScore(nodes_out[i]));}
+
+         if (labels_test[i] == 1) {h2_npvscore_sig->Fill(nPrimVtx[i], funcScore(nodes_out[i]));}
+         if (labels_test[i] == 0) {h2_npvscore_pil->Fill(nPrimVtx[i], funcScore(nodes_out[i]));}
+
+         if (labels_test[i] == 1) {h2_etascore_sig->Fill(clusterEta[i], funcScore(nodes_out[i]));}
+         if (labels_test[i] == 0) {h2_etascore_pil->Fill(clusterEta[i], funcScore(nodes_out[i]));}
+
+         if (labels_test[i] == 1) {h2_muscore_sig->Fill(avgMu[i], funcScore(nodes_out[i]));}
+         if (labels_test[i] == 0) {h2_muscore_pil->Fill(avgMu[i], funcScore(nodes_out[i]));}
+
+         if (labels_test[i] == 1) {h2_lambdascore_sig->Fill(cluster_CENTER_LAMBDA[i], funcScore(nodes_out[i]));}
+         if (labels_test[i] == 0) {h2_lambdascore_pil->Fill(cluster_CENTER_LAMBDA[i], funcScore(nodes_out[i]));}
+
+         if (labels_test[i] == 1) {h2_xscore_sig->Fill(cluster_CENTER_X[i], funcScore(nodes_out[i]));}
+         if (labels_test[i] == 0) {h2_xscore_pil->Fill(cluster_CENTER_X[i], funcScore(nodes_out[i]));}
+
+         if (labels_test[i] == 1) {h2_yscore_sig->Fill(cluster_CENTER_Y[i], funcScore(nodes_out[i]));}
+         if (labels_test[i] == 0) {h2_yscore_pil->Fill(cluster_CENTER_Y[i], funcScore(nodes_out[i]));}
+
+         if (labels_test[i] == 1) {h2_zscore_sig->Fill(cluster_CENTER_Z[i], funcScore(nodes_out[i]));}
+         if (labels_test[i] == 0) {h2_zscore_pil->Fill(cluster_CENTER_Z[i], funcScore(nodes_out[i]));}
+
+
+         if ((0 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.1))) {
+             if (labels_test[i] == 1) {h2_rzscore1sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore1pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.1 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.2))) {
+             if (labels_test[i] == 1) {h2_rzscore2sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore2pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.2 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.3))) {
+             if (labels_test[i] == 1) {h2_rzscore3sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore3pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.3 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.4))) {
+             if (labels_test[i] == 1) {h2_rzscore4sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore4pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.4 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.5))) {
+             if (labels_test[i] == 1) {h2_rzscore5sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore5pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.5 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.6))) {
+             if (labels_test[i] == 1) {h2_rzscore6sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore6pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.6 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.7))) {
+             if (labels_test[i] == 1) {h2_rzscore7sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore7pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.7 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.8))) {
+             if (labels_test[i] == 1) {h2_rzscore8sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore8pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.8 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] < 0.9))) {
+             if (labels_test[i] == 1) {h2_rzscore9sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore9pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+         if ((0.9 <= funcScore(nodes_out[i])) && (funcScore(nodes_out[i] <= 1))) {
+             if (labels_test[i] == 1) {h2_rzscore10sig->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+             if (labels_test[i] == 0) {h2_rzscore10pil->Fill(cluster_CENTER_Z[i], TMath::Power(TMath::Power(cluster_CENTER_X[i], 2) + TMath::Power(cluster_CENTER_Y[i], 2), 0.5));}
+         }
+
          
          if (labels_test[i] == 1) { hScore_signal->Fill(nodes_out[i]); }
          if (labels_test[i] == 0) { hScore_pileup->Fill(nodes_out[i]); }
@@ -171,7 +310,7 @@ void FinalPlots::Loop(){
    hScore_signal->GetYaxis()->SetTitle("Number of clusters");
    hScore_signal->Draw("H");
    hScore_pileup->Draw("HSAME");
-   c->SaveAs("./scores.png");
+   c->SaveAs("./plots/scores.png");
    
    //////////////////////////////////////////////////
    //////////////////////////////////////////////////
@@ -219,10 +358,165 @@ void FinalPlots::Loop(){
 
    hRatio->Draw("H");
 
-   c1->SaveAs(("./plot.png"));
+   c1->SaveAs(("./plots/plot.png"));
 
    //////////////////////////////////////////////////
    //////////////////////////////////////////////////
+
+   TCanvas*d = new TCanvas("", "", 500, 500);
+   d->SetLogx();
+   h2_ml->Draw("colz");
+   d->SaveAs("./plots/h2_response/h2_ml.png");
+   h2_labelsig->Draw("colz");
+   d->SaveAs("./plots/h2_response/h2_label.png");
+   d->Close();
+
+   TCanvas*t = new TCanvas("", "", 500, 500);
+   t->SetLogz();
+   h2_sigtimescore->Draw("colz");
+   t->SaveAs("./plots/h2_time/timescore_sig.png");
+   h2_piltimescore->Draw("colz");
+   t->SaveAs("./plots/h2_time/timescore_pil.png");
+   t->Close();
+
+   TCanvas*n = new TCanvas("", "", 500, 500);
+   n->SetLogz();
+   h2_npvscore_sig->Draw("colz");
+   n->SaveAs("./plots/h2_npv/npvscore_sig.png");
+   h2_npvscore_pil->Draw("colz");
+   n->SaveAs("./plots/h2_npv/npvscore_pil.png");
+   n->Close();
+
+   TCanvas*e = new TCanvas("", "", 500, 500);
+   e->SetLogz();
+   h2_etascore_sig->Draw("colz");
+   e->SaveAs("./plots/h2_eta/etascore_sig.png");
+   h2_etascore_pil->Draw("colz");
+   e->SaveAs("./plots/h2_eta/etascore_pil.png");
+   e->Close();
+
+   TCanvas*m = new TCanvas("", "", 500, 500);
+   m->SetLogz();
+   h2_muscore_sig->Draw("colz");
+   m->SaveAs("./plots/h2_mu/muscore_sig.png");
+   h2_muscore_pil->Draw("colz");
+   m->SaveAs("./plots/h2_mu/muscore_pil.png");
+   m->Close();
+
+   TCanvas*a = new TCanvas("", "", 500, 500);
+   a->SetLogz();
+   h2_lambdascore_sig->Draw("colz");
+   a->SaveAs("./plots/h2_lambda/lambdascore_sig.png");
+   h2_lambdascore_pil->Draw("colz");
+   a->SaveAs("./plots/h2_lambda/lambdascore_pil.png");
+   a->Close();
+
+   TCanvas*x = new TCanvas("", "", 500, 500);
+   x->SetLogz();
+   h2_xscore_sig->Draw("colz");
+   x->SaveAs("./plots/h2_x/xscore_sig.png");
+   h2_xscore_pil->Draw("colz");
+   x->SaveAs("./plots/h2_x/xscore_pil.png");
+   x->Close();
+
+   TCanvas*y = new TCanvas("", "", 500, 500);
+   y->SetLogz();
+   h2_yscore_sig->Draw("colz");
+   y->SaveAs("./plots/h2_y/yscore_sig.png");
+   h2_yscore_pil->Draw("colz");
+   y->SaveAs("./plots/h2_y/yscore_pil.png");
+   y->Close();
+
+   TCanvas*z = new TCanvas("", "", 500, 500);
+   z->SetLogz();
+   h2_zscore_sig->Draw("colz");
+   z->SaveAs("./plots/h2_z/zscore_sig.png");
+   h2_zscore_pil->Draw("colz");
+   z->SaveAs("./plots/h2_z/zscore_pil.png");
+   z->Close();
+
+    
+   TCanvas*r1 = new TCanvas("", "", 500, 500);
+   r1->SetLogz();
+   h2_rzscore1sig->Draw("colz");
+   r1->SaveAs("./plots/h2_rz/rzscore1_sig.png");
+   h2_rzscore1pil->Draw("colz");
+   r1->SaveAs("./plots/h2_rz/rzscore1_pil.png");
+   r1->Close();
+    
+   TCanvas*r2 = new TCanvas("", "", 500, 500);
+   r2->SetLogz();
+   h2_rzscore2sig->Draw("colz");
+   r2->SaveAs("./plots/h2_rz/rzscore2_sig.png");
+   h2_rzscore2pil->Draw("colz");
+   r2->SaveAs("./plots/h2_rz/rzscore2_pil.png");
+   r2->Close();
+    
+   TCanvas*r3 = new TCanvas("", "", 500, 500);
+   r3->SetLogz();
+   h2_rzscore3sig->Draw("colz");
+   r3->SaveAs("./plots/h2_rz/rzscore3_sig.png");
+   h2_rzscore3pil->Draw("colz");
+   r3->SaveAs("./plots/h2_rz/rzscore3_pil.png");
+   r3->Close();
+
+   TCanvas*r4 = new TCanvas("", "", 500, 500);
+   r4->SetLogz();
+   h2_rzscore4sig->Draw("colz");
+   r4->SaveAs("./plots/h2_rz/rzscore4_sig.png");
+   h2_rzscore4pil->Draw("colz");
+   r4->SaveAs("./plots/h2_rz/rzscore4_pil.png");
+   r4->Close();
+
+   TCanvas*r5 = new TCanvas("", "", 500, 500);
+   r5->SetLogz();
+   h2_rzscore5sig->Draw("colz");
+   r5->SaveAs("./plots/h2_rz/rzscore5_sig.png");
+   h2_rzscore5pil->Draw("colz");
+   r5->SaveAs("./plots/h2_rz/rzscore5_pil.png");
+   r5->Close();
+
+   TCanvas*r6 = new TCanvas("", "", 500, 500);
+   r6->SetLogz();
+   h2_rzscore6sig->Draw("colz");
+   r6->SaveAs("./plots/h2_rz/rzscore6_sig.png");
+   h2_rzscore6pil->Draw("colz");
+   r6->SaveAs("./plots/h2_rz/rzscore6_pil.png");
+   r6->Close();
+
+   TCanvas*r7 = new TCanvas("", "", 500, 500);
+   r7->SetLogz();
+   h2_rzscore7sig->Draw("colz");
+   r7->SaveAs("./plots/h2_rz/rzscore7_sig.png");
+   h2_rzscore7pil->Draw("colz");
+   r7->SaveAs("./plots/h2_rz/rzscore7_pil.png");
+   r7->Close();
+
+   TCanvas*r8 = new TCanvas("", "", 500, 500);
+   r8->SetLogz();
+   h2_rzscore8sig->Draw("colz");
+   r8->SaveAs("./plots/h2_rz/rzscore8_sig.png");
+   h2_rzscore8pil->Draw("colz");
+   r8->SaveAs("./plots/h2_rz/rzscore8_pil.png");
+   r8->Close();
+
+   TCanvas*r9 = new TCanvas("", "", 500, 500);
+   r9->SetLogz();
+   h2_rzscore9sig->Draw("colz");
+   r9->SaveAs("./plots/h2_rz/rzscore9_sig.png");
+   h2_rzscore9pil->Draw("colz");
+   r9->SaveAs("./plots/h2_rz/rzscore9_pil.png");
+   r9->Close();
+
+   TCanvas*r10 = new TCanvas("", "", 500, 500);
+   r10->SetLogz();
+   h2_rzscore10sig->Draw("colz");
+   r10->SaveAs("./plots/h2_rz/rzscore10_sig.png");
+   h2_rzscore10pil->Draw("colz");
+   r10->SaveAs("./plots/h2_rz/rzscore10_pil.png");
+   r10->Close();
+    
+    
    TH1D* h_area_median     = new TH1D("", "", Nbins, bins);
    TH1D* h_Edep_median     = new TH1D("", "", Nbins, bins);
    TH1D* h_labelsig_median = new TH1D("", "", Nbins, bins);
@@ -266,7 +560,7 @@ void FinalPlots::Loop(){
    h_area_median->SetXTitle("E [GeV]");
    h_area_median->SetYTitle("Jet energy response, R_{E}");
    lMed->Draw("SAME");
-   cMedian->SaveAs("./median.png");
+   cMedian->SaveAs("./plots/median.png");
 
    TCanvas*cIQR = new TCanvas("", "", 500, 500);
    cIQR->SetLogx();
@@ -281,7 +575,7 @@ void FinalPlots::Loop(){
    h_labelsig_iqr->Draw("HSAME");
    h_ml_iqr->Draw("HSAME");
    lMed->Draw("SAME");
-   cIQR->SaveAs("./iqr.png");
+   cIQR->SaveAs("./plots/iqr.png");
    
 
    //////////////////////////////////////////////////

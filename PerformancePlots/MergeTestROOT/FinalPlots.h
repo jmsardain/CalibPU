@@ -428,9 +428,9 @@ FinalPlots::FinalPlots(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/data/jmsardain/CalibPU/trainings/pu/ckpts/Feb32026/final.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/data/jmsardain/CalibPU/trainings/pu/ckpts/Feb52026/final.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/data/jmsardain/CalibPU/trainings/pu/ckpts/Feb32026/final.root");
+         f = new TFile("/data/jmsardain/CalibPU/trainings/pu/ckpts/Feb52026/final.root");
       }
       f->GetObject("JetTree",tree);
 
