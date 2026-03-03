@@ -7,12 +7,103 @@
 #include "TColor.h"
 #include "TH1D.h"
 #include "TH2D.h"
+#include "TMath.h"
 #include "TLegend.h"
 #include <string>
 #include "AtlasStyle.h"
 #include "AtlasLabels.h"
 #include "AtlasUtils.h"
 using namespace std ;
+
+TH1D* histoRatio(TH1D*h1, TH1D*h2, bool diffRes){
+	TH1D* h_1 = (TH1D*)h2->Clone("ratio1"); 
+
+	for(int i=1; i<h_1->GetNbinsX()+1; i++){ 
+		if (h2->GetBinContent(i) == 0 ) {h_1->SetBinContent(i, 0 );}
+		if(diffRes) { // if resolution, don't do ratio, do: sqrt( h1**2 - h2**2 )
+			h_1->SetBinContent(i, TMath::Sqrt(h1->GetBinContent(i)*h1->GetBinContent(i) - h2->GetBinContent(i)*h2->GetBinContent(i)));
+		} else {
+			h_1->SetBinContent(i, h1->GetBinContent(i) / h2->GetBinContent(i));
+		}
+	}
+	
+	return h_1; 
+
+}
+TCanvas* DrawJetResponseRatio(TH1D*jetarea, TH1D*jetEdep, TH1D*jetLabel, TH1D*jetML, TString xlabel, TString ylabel, bool logxaxis){
+	jetarea->SetLineColor(TColor::GetColor("#ef476f"));
+    jetEdep->SetLineColor(TColor::GetColor("#f78c6b"));
+    jetLabel->SetLineColor(TColor::GetColor("#ffd166"));
+    jetML->SetLineColor(TColor::GetColor("#06d6a0"));
+
+	jetarea->GetXaxis()->SetTitle(xlabel); 
+	jetarea->GetYaxis()->SetTitle(ylabel); 
+
+	if (ylabel.Contains("Median")) { jetarea->GetYaxis()->SetRangeUser(0., 1.8);}
+	if (ylabel.Contains("Resolution")) { jetarea->GetYaxis()->SetRangeUser(0., 1.6);}
+	
+	TLegend* l = new TLegend(0.7, 0.7, 0.9, 0.9); 
+	l->AddEntry(jetarea,  "E_{jet}^{area} / E_{jet}^{true}", "l");
+	l->AddEntry(jetEdep,  "E_{jet}^{dep} / E_{jet}^{true}", "l");
+	l->AddEntry(jetLabel, "E_{jet}^{signal} / E_{jet}^{true}", "l");
+	l->AddEntry(jetML,    "E_{jet}^{ML} / E_{jet}^{true}", "l");
+	
+    TCanvas* c = new TCanvas("", "", 600, 600);
+	TPad* pad1 = new TPad("pad1","pad1",0,0.3,1,1);
+	pad1->SetBottomMargin(0); 
+	pad1->Draw();
+	pad1->cd();
+	if(logxaxis){ pad1->SetLogx(); }
+	if(logxaxis){ c->SetLogx(); }
+	jetarea->Draw("H");
+	jetEdep->Draw("H SAME");
+	jetLabel->Draw("H SAME");
+	jetML->Draw("H SAME");
+	l->Draw("SAME");
+
+	c->cd();
+	TPad* pad2 = new TPad("pad2","pad2",0,0,1,0.3);
+	pad2->SetTopMargin(0);
+	pad2->SetBottomMargin(0.3);
+	if(logxaxis){ pad2->SetLogx(); }
+	pad2->Draw();
+	pad2->cd();
+
+	// Draw ratios
+	bool diffRes = false;
+	if (ylabel.Contains("Median")) { diffRes = false;}
+	if (ylabel.Contains("Resolution")) { diffRes = true;}
+	auto hRatio_area     = histoRatio(jetarea,  jetarea, diffRes);
+	auto hRatio_Edep     = histoRatio(jetEdep,  jetarea, diffRes);
+	auto hRatio_Label    = histoRatio(jetLabel, jetarea, diffRes);
+	auto hRatio_ML       = histoRatio(jetML,    jetarea, diffRes);
+
+	hRatio_area->SetLineColor(TColor::GetColor("#ef476f"));
+    hRatio_Edep->SetLineColor(TColor::GetColor("#f78c6b"));
+    hRatio_Label->SetLineColor(TColor::GetColor("#ffd166"));
+    hRatio_ML->SetLineColor(TColor::GetColor("#06d6a0"));
+
+	hRatio_area->SetTitle("");
+	hRatio_area->GetYaxis()->SetTitle("Ratio");
+	hRatio_area->GetYaxis()->SetNdivisions(505);
+	hRatio_area->GetYaxis()->SetTitleSize(0.15);
+	hRatio_area->GetYaxis()->SetTitleOffset(0.3);
+	hRatio_area->GetYaxis()->SetLabelSize(0.12);
+
+	hRatio_area->GetXaxis()->SetTitle("Energy");
+	hRatio_area->GetXaxis()->SetLabelSize(0.12);
+	hRatio_area->GetXaxis()->SetTitleSize(0.15);
+	hRatio_area->GetYaxis()->SetRangeUser(0.8, 1.2);
+
+	hRatio_area->Draw("H");
+	hRatio_Edep->Draw("H SAME");
+	hRatio_Label->Draw("H SAME");
+	hRatio_ML->Draw("H SAME");
+	
+	return c; 
+
+
+}
 
 TCanvas* DrawJetResponse(TH1D*jetarea, TH1D*jetEdep, TH1D*jetLabel, TH1D*jetML, TString xlabel, TString ylabel, bool logxaxis){
 	jetarea->SetLineColor(TColor::GetColor("#ef476f"));
@@ -298,7 +389,8 @@ int main(int argc, char* argv[]){
 	TH1D* h_labelsig_median = (TH1D*)f->Get("JetResponse_median_labelsig"); 
 	TH1D* h_ml_median       = (TH1D*)f->Get("JetResponse_median_ml"); 
 	TCanvas*cMedian; 
-	cMedian = DrawJetResponse(h_area_median, h_Edep_median, h_labelsig_median, h_ml_median, "E_{jet}^{JES} [GeV]", "Jet Response Median", true);
+	// cMedian = DrawJetResponse(h_area_median, h_Edep_median, h_labelsig_median, h_ml_median, "E_{jet}^{JES} [GeV]", "Jet Response Median", true);
+	cMedian = DrawJetResponseRatio(h_area_median, h_Edep_median, h_labelsig_median, h_ml_median, "E_{jet}^{JES} [GeV]", "Jet Response Median", true);
 	cMedian->SaveAs("./plots/JetResponseMedian.png");
 	// IQR 	
 	TH1D* h_area_iqr     = (TH1D*)f->Get("JetResponse_iqr_area"); 
@@ -306,7 +398,8 @@ int main(int argc, char* argv[]){
 	TH1D* h_labelsig_iqr = (TH1D*)f->Get("JetResponse_iqr_labelsig"); 
 	TH1D* h_ml_iqr       = (TH1D*)f->Get("JetResponse_iqr_ml"); 
 	TCanvas*cIQR; 
-	cIQR = DrawJetResponse(h_area_iqr, h_Edep_iqr, h_labelsig_iqr, h_ml_iqr, "E_{jet}^{JES} [GeV]", "Jet Response Resolution", true);
+	// cIQR = DrawJetResponse(h_area_iqr, h_Edep_iqr, h_labelsig_iqr, h_ml_iqr, "E_{jet}^{JES} [GeV]", "Jet Response Resolution", true);
+	cIQR = DrawJetResponseRatio(h_area_iqr, h_Edep_iqr, h_labelsig_iqr, h_ml_iqr, "E_{jet}^{JES} [GeV]", "Jet Response Resolution", true);
 	cIQR->SaveAs("./plots/JetResponseResolution.png");
 
 
