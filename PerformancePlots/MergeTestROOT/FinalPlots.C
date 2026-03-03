@@ -1,6 +1,7 @@
 #define FinalPlots_cxx
 #include "FinalPlots.h"
 #include <TH2.h>
+#include <TH3.h>
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <TLegend.h>
@@ -136,7 +137,10 @@ void FinalPlots::Loop(){
 
    // 
    const int Nbins_E = 100;
+   const int Nbins_Score = 100;
    auto bins_E = LogBins(-3.0, 2.0, Nbins_E);
+   std::vector<double> bins_score;
+   for (int i = 0; i <= 100; ++i) { bins_score.push_back(i / 100.0); } 
 
    TH2D* h2_area     = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
    TH2D* h2_Edep     = new TH2D("", "", Nbins, bins, 100, 0.05, 2);
@@ -148,6 +152,15 @@ void FinalPlots::Loop(){
    TH2D* h2_Edep_Eem_signal     = new TH2D("", "", Nbins, bins_E.data(), Nbins, bins_E.data());
    TH2D* h2_Edep_Eem_pileup     = new TH2D("", "", Nbins, bins_E.data(), Nbins, bins_E.data());
 
+   TH3D* h3_Edep_Eem_score_all        = new TH3D("", "", Nbins, bins_E.data(), Nbins, bins_E.data(), bins_score.size() - 1, bins_score.data());
+   TH3D* h3_Edep_Eem_score_signal     = new TH3D("", "", Nbins, bins_E.data(), Nbins, bins_E.data(), bins_score.size() - 1, bins_score.data());
+   TH3D* h3_Edep_Eem_score_pileup     = new TH3D("", "", Nbins, bins_E.data(), Nbins, bins_E.data(), bins_score.size() - 1, bins_score.data());
+
+   TH3D* h3_Edep_Eem_funcscore_all        = new TH3D("", "", Nbins, bins_E.data(), Nbins, bins_E.data(), bins_score.size() - 1, bins_score.data());
+   TH3D* h3_Edep_Eem_funcscore_signal     = new TH3D("", "", Nbins, bins_E.data(), Nbins, bins_E.data(), bins_score.size() - 1, bins_score.data());
+   TH3D* h3_Edep_Eem_funcscore_pileup     = new TH3D("", "", Nbins, bins_E.data(), Nbins, bins_E.data(), bins_score.size() - 1, bins_score.data());
+
+
    /// signal 
    TH2D* h2_Edep_signal   = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
    TH2D* h2_Eem_signal    = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
@@ -155,6 +168,13 @@ void FinalPlots::Loop(){
    TH2D* h2_lat_signal    = new TH2D("", "", 100, 0, 1, 100, 0, 1);
    TH2D* h2_isol_signal   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
    TH2D* h2_time_signal   = new TH2D("", "", 100, -50, 50, 100, 0, 1);
+
+   TH2D* h2_Edep_signal_new  = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
+   TH2D* h2_Eem_signal_new    = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
+   TH2D* h2_long_signal_new   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_lat_signal_new    = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_isol_signal_new   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_time_signal_new   = new TH2D("", "", 100, -50, 50, 100, 0, 1);
 
    /// pileup 
    TH2D* h2_Edep_pileup   = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
@@ -164,6 +184,12 @@ void FinalPlots::Loop(){
    TH2D* h2_isol_pileup   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
    TH2D* h2_time_pileup   = new TH2D("", "", 100, -50, 50, 100, 0, 1);
 
+   TH2D* h2_Edep_pileup_new   = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
+   TH2D* h2_Eem_pileup_new    = new TH2D("", "", Nbins, bins_E.data(), 100, 0, 1);
+   TH2D* h2_long_pileup_new   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_lat_pileup_new    = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_isol_pileup_new   = new TH2D("", "", 100, 0, 1, 100, 0, 1);
+   TH2D* h2_time_pileup_new   = new TH2D("", "", 100, -50, 50, 100, 0, 1);
    ////////////////////////////////////////////////////////////////////////
    ////////////////////////////////////////////////////////////////////////
    if (fChain == 0) return;
@@ -197,8 +223,13 @@ void FinalPlots::Loop(){
          // sum cluster (score function)
          sum_ClusE_ml += clusterE[i] * funcScore(nodes_out[i]); 
          
+         double newScore = funcScore(nodes_out[i]);
+
          h2_Edep_Eem_all->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i]); 
 
+         h3_Edep_Eem_score_all->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i], nodes_out[i]); 
+         h3_Edep_Eem_funcscore_all->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i], newScore); 
+         
          if (labels_test[i] == 1) { 
             hScore_signal->Fill(nodes_out[i]); 
             h2_Edep_Eem_signal->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i]); 
@@ -208,6 +239,17 @@ void FinalPlots::Loop(){
             h2_lat_signal->Fill(cluster_LATERAL[i], nodes_out[i]); 
             h2_isol_signal->Fill(cluster_ISOLATION[i], nodes_out[i]);   
             h2_time_signal->Fill(cluster_time[i], nodes_out[i]);   
+
+            h2_Edep_signal_new->Fill(cluster_ENG_CALIB_TOT[i], newScore);
+            h2_Eem_signal_new->Fill(clusterE[i], newScore);
+            h2_long_signal_new->Fill(cluster_LONGITUDINAL[i],newScore);
+            h2_lat_signal_new->Fill(cluster_LATERAL[i], newScore);
+            h2_isol_signal_new->Fill(cluster_ISOLATION[i], newScore);
+            h2_time_signal_new->Fill(cluster_time[i], newScore);
+
+            h3_Edep_Eem_score_signal->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i], nodes_out[i]); 
+            h3_Edep_Eem_funcscore_signal->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i], newScore); 
+         
          }
          if (labels_test[i] == 0) { 
             hScore_pileup->Fill(nodes_out[i]); 
@@ -219,6 +261,15 @@ void FinalPlots::Loop(){
             h2_isol_pileup->Fill(cluster_ISOLATION[i], nodes_out[i]);   
             h2_time_pileup->Fill(cluster_time[i], nodes_out[i]);   
 
+            h2_Edep_pileup_new->Fill(cluster_ENG_CALIB_TOT[i],  newScore);
+            h2_Eem_pileup_new->Fill(clusterE[i],  newScore);
+            h2_long_pileup_new->Fill(cluster_LONGITUDINAL[i], newScore);
+            h2_lat_pileup_new->Fill(cluster_LATERAL[i], newScore);
+            h2_isol_pileup_new->Fill(cluster_ISOLATION[i], newScore);
+            h2_time_pileup_new->Fill(cluster_time[i], newScore);
+
+            h3_Edep_Eem_score_pileup->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i], nodes_out[i]); 
+            h3_Edep_Eem_funcscore_pileup->Fill(cluster_ENG_CALIB_TOT[i], clusterE[i], newScore); 
          }
 
       }
@@ -251,13 +302,29 @@ void FinalPlots::Loop(){
    h2_Edep_Eem_all   ->Write("Edep_Eem_all"); 
    h2_Edep_Eem_signal->Write("Edep_Eem_signal"); 
    h2_Edep_Eem_pileup->Write("Edep_Eem_pileup"); 
+   // 
+   h3_Edep_Eem_score_all->Write("Edep_Eem_score_all"); 
+   h3_Edep_Eem_score_signal->Write("Edep_Eem_score_signal"); 
+   h3_Edep_Eem_score_pileup->Write("Edep_Eem_score_pileup"); 
 
+   h3_Edep_Eem_funcscore_all->Write("Edep_Eem_funcscore_all"); 
+   h3_Edep_Eem_funcscore_signal->Write("Edep_Eem_funcscore_signal"); 
+   h3_Edep_Eem_funcscore_pileup->Write("Edep_Eem_funcscore_pileup"); 
+
+   //
    h2_Edep_signal->Write("score_Edep_signal"); 
    h2_Eem_signal ->Write("score_Eem_signal"); 
    h2_long_signal->Write("score_long_signal"); 
    h2_lat_signal ->Write("score_lat_signal"); 
    h2_isol_signal->Write("score_isol_signal"); 
    h2_time_signal->Write("score_time_signal"); 
+
+   h2_Edep_signal_new->Write("funcscore_Edep_signal"); 
+   h2_Eem_signal_new ->Write("funcscore_Eem_signal"); 
+   h2_long_signal_new->Write("funcscore_long_signal"); 
+   h2_lat_signal_new ->Write("funcscore_lat_signal"); 
+   h2_isol_signal_new->Write("funcscore_isol_signal"); 
+   h2_time_signal_new->Write("funcscore_time_signal"); 
 
    /// pileup 
    h2_Edep_pileup->Write("score_Edep_pileup"); 
@@ -267,6 +334,12 @@ void FinalPlots::Loop(){
    h2_isol_pileup->Write("score_isol_pileup"); 
    h2_time_pileup->Write("score_time_pileup"); 
 
+   h2_Edep_pileup_new->Write("funcscore_Edep_pileup"); 
+   h2_Eem_pileup_new ->Write("funcscore_Eem_pileup"); 
+   h2_long_pileup_new->Write("funcscore_long_pileup"); 
+   h2_lat_pileup_new ->Write("funcscore_lat_pileup"); 
+   h2_isol_pileup_new->Write("funcscore_isol_pileup"); 
+   h2_time_pileup_new->Write("funcscore_time_pileup"); 
 
    //
    h_area_median    ->Write("JetResponse_median_area"); 
