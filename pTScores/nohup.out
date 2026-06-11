@@ -1,0 +1,48 @@
+loading data...
+my chain = 740556
+creating histograms...
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: MC (Potential memory leak).
+filling histograms...
+drawing histograms...
+Info in <TCanvas::Print>: png file ./MC/Score10pT15.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score15pT22.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score22pT33.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score33pT50.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score50pT76.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score76pT115.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score115pT175.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score175pT265.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score265pT400.png has been created
+Info in <TCanvas::Print>: png file ./MC/Score400pT630.png has been created
+loading data...
+my chain = 740556
+creating histograms...
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+Warning in <TROOT::Append>: Replacing existing TH1: Data (Potential memory leak).
+filling histograms...
+drawing histograms...
+Info in <TCanvas::Print>: png file ./Data/Score10pT15.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score15pT22.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score22pT33.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score33pT50.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score50pT76.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score76pT115.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score115pT175.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score175pT265.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score265pT400.png has been created
+Info in <TCanvas::Print>: png file ./Data/Score400pT630.png has been created

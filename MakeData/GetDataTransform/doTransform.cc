@@ -1,6 +1,6 @@
 #include <iostream>
 #include "TString.h"
-#include "GetValue.h"
+#include "dataTransforms.h"
 #include "TChain.h"
 #include "TFile.h"
 #include "TTree.h"
@@ -13,16 +13,14 @@ using namespace std ;
 
 int main(int argc, char* argv[]){
 
-	TString theLink = "/data/jmsardain/CalibPU/datasets/pu/JetTree_all_train.root";
-    // TString theLink = "/data/dsmith/data_for_test/user.cdelitzs.45207441._000199.mltree_cluster_calo.root";
-	TString treeName = "JetTree";
-    // TString treeName = "ClusterTree";
+    TString theLink = "/data/dsmith/data_for_test/user.cdelitzs.45207441._000199.mltree_cluster_calo.root";
+    TString treeName = "ClusterTree";
 	TChain * myChain = new TChain( treeName ) ;
 	myChain->Add( theLink );
 	cout << "my chain = " << myChain->GetEntries() << endl ;
 
-	GetValue * myAnalysis ;
-	myAnalysis =  new GetValue( myChain ) ;
+	dataTransforms * myAnalysis ;
+	myAnalysis =  new dataTransforms( myChain ) ;
 	myAnalysis->Loop();
 	
 	return 0;

@@ -1,0 +1,65 @@
+g++ -pthread -std=c++20 -m64 -I/cvmfs/sft.cern.ch/lcg/releases/LCG_108_ATLAS_2/ROOT/6.36.02/x86_64-el9-gcc14-opt/include -L/cvmfs/sft.cern.ch/lcg/releases/LCG_108_ATLAS_2/ROOT/6.36.02/x86_64-el9-gcc14-opt/lib -lCore -lImt -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lROOTVecOps -lTree -lTreePlayer -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lROOTNTuple -lMultiProc -lROOTDataFrame -lROOTNTupleUtil -Wl,-rpath,/cvmfs/sft.cern.ch/lcg/releases/LCG_108_ATLAS_2/ROOT/6.36.02/x86_64-el9-gcc14-opt/lib -pthread -lm -ldl -rdynamic
+In file included from ./data_hist/dataHist.C:2:
+./data_hist/dataHist.h: In member function 'virtual Int_t dataHist::Cut(Long64_t)':
+./data_hist/dataHist.h:311:30: warning: unused parameter 'entry' [-Wunused-parameter]
+  311 | Int_t dataHist::Cut(Long64_t entry)
+      |                     ~~~~~~~~~^~~~~
+./data_hist/dataHist.C: In member function 'virtual void dataHist::Loop()':
+./data_hist/dataHist.C:169:10: warning: unused variable 'h_nCells' [-Wunused-variable]
+  169 |    TH1D* h_nCells = new TH1D("", "", Nbins, 0, 100);
+      |          ^~~~~~~~
+In file included from ./mc_hist/mcHist.C:2:
+./mc_hist/mcHist.h: In member function 'virtual Int_t mcHist::Cut(Long64_t)':
+./mc_hist/mcHist.h:468:28: warning: unused parameter 'entry' [-Wunused-parameter]
+  468 | Int_t mcHist::Cut(Long64_t entry)
+      |                   ~~~~~~~~~^~~~~
+In file included from ./ApplyWeights.C:2:
+./ApplyWeights.h: In member function 'virtual Int_t ApplyWeights::Cut(Long64_t)':
+./ApplyWeights.h:311:34: warning: unused parameter 'entry' [-Wunused-parameter]
+  311 | Int_t ApplyWeights::Cut(Long64_t entry)
+      |                         ~~~~~~~~~^~~~~
+./ApplyWeights.C: In member function 'virtual void ApplyWeights::Loop()':
+./ApplyWeights.C:37:10: warning: unused variable 'h2_clust_pt_eta_data' [-Wunused-variable]
+   37 |    TH2D* h2_clust_pt_eta_data = (TH2D*)fdata->Get("h2_clust_pt_eta");
+      |          ^~~~~~~~~~~~~~~~~~~~
+./ApplyWeights.C:61:10: warning: unused variable 'h2_clust_pt_eta_mc' [-Wunused-variable]
+   61 |    TH2D* h2_clust_pt_eta_mc = (TH2D*)fmc->Get("h2_clust_pt_eta");
+      |          ^~~~~~~~~~~~~~~~~~
+./ApplyWeights.C:70:10: warning: unused variable 'h_ncells_mc' [-Wunused-variable]
+   70 |    TH1D* h_ncells_mc = (TH1D*)fmc->Get("h_nCells");
+      |          ^~~~~~~~~~~
+./ApplyWeights.C:157:10: warning: unused variable 'weight_ncells' [-Wunused-variable]
+  157 |    TH1D* weight_ncells = new TH1D("", "", Nbins, 0, 100);
+      |          ^~~~~~~~~~~~~
+my chain = 1053118963
+Info in <TCanvas::Print>: png file /home/dsmith/CalibPU/weights/data_hist/data_mu.png has been created
+Info in <TCanvas::Print>: png file /home/dsmith/CalibPU/weights/data_hist/data_cluster_eta_pt.png has been created
+Info in <TCanvas::Print>: png file /home/dsmith/CalibPU/weights/data_hist/data_jet_eta_pt.png has been created
+my chain = 65175456
+Info in <TCanvas::Print>: png file /home/dsmith/CalibPU/weights/mc_hist/mc_mu.png has been created
+Info in <TCanvas::Print>: png file /home/dsmith/CalibPU/weights/mc_hist/mc_cluster_eta_pt.png has been created
+Info in <TCanvas::Print>: png file /home/dsmith/CalibPU/weights/mc_hist/mc_jet_eta_pt.png has been created
+my chain = 1053118963
+Info in <TCanvas::Print>: png file ./output/pt_eta/weights_Pt_Eta.png has been created
+Info in <TCanvas::Print>: png file ./output/pt_eta/weights_mu.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_E.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_npv.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_zT.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_zL.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_zRel.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_diffEta.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_Eta.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_Phi.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_Lambda.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_mag.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_frac_em.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_eng_dens.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_lateral.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_longitudinal.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_second_time.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_ptd.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_time.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_iso.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_signif.png has been created
+Info in <TCanvas::Print>: png file ./output/scaled_mu.png has been created
+Info in <TCanvas::Print>: png file ./output/mult_E.png has been created

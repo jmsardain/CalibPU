@@ -19,12 +19,20 @@ def transform(variable):
     Derived from train data sample, it should be used to transform train AND test ! 
     '''
     mean, std = 0, 0
-    if variable=="clusterE": mean, std =  0.515713 , 1.69164
-    if variable=="cluster_CENTER_LAMBDA": mean, std =  5.32953 , 1.14798
-    if variable=="cluster_FIRST_ENG_DENS": mean, std =  -14.4064 , 1.43416
-    if variable=="cluster_SECOND_TIME": mean, std =  -1.65613 , 7.00348
-    if variable=="cluster_SIGNIFICANCE": mean, std =  1.42644 , 1.24784
-    if variable=="cluster_CENTER_MAG": mean, std =  7.86581 , 0.360147
+    # if variable=="clusterE": mean, std =  0.515713 , 1.69164
+    # if variable=="cluster_CENTER_LAMBDA": mean, std =  5.32953 , 1.14798
+    # if variable=="cluster_FIRST_ENG_DENS": mean, std =  -14.4064 , 1.43416
+    # if variable=="cluster_SECOND_TIME": mean, std =  -1.65613 , 7.00348
+    # if variable=="cluster_SIGNIFICANCE": mean, std =  1.42644 , 1.24784
+    # if variable=="cluster_CENTER_MAG": mean, std =  7.86581 , 0.360147
+
+    ### mean and std for data
+    if variable=="clusterE": mean, std =  0.769285 , 1.66154
+    if variable=="cluster_CENTER_LAMBDA": mean, std =  5.48896 , 1.11419
+    if variable=="cluster_FIRST_ENG_DENS": mean, std =  -14.1986 , 1.68766
+    if variable=="cluster_SECOND_TIME": mean, std =  -1.27973 , 6.68972
+    if variable=="cluster_SIGNIFICANCE": mean, std =  1.39433 , 1.1059
+    if variable=="cluster_CENTER_MAG": mean, std =  7.98977 , 0.372179
 
     return [mean, std] 
 
@@ -70,38 +78,41 @@ def main():
         'nPrimVtx', ## 13
         'avgMu', ## 14
         'clusterPhi', ## 15
-        'diffEta', ## 16
-        'zT', 'zL', 'zRel', ## 17,18,19
+        # 'diffEta', ## 16
+        # 'zT', 'zL', 'zRel', ## 17,18,19
         'cluster_nCells', ## 20
         # 'jetRawE'
         
     ]  
 
     label_branch = "labels" 
-    tree_name = "JetTree"
+    tree_name = "ClusterTree"
 
-    with uproot.open('/data/jmsardain/CalibPU/datasets/pu/JetTree_all_'+args.step+'.root') as f:
+    # with uproot.open('/data/jmsardain/CalibPU/datasets/pu/JetTree_all_'+args.step+'.root') as f:
+    with uproot.open('/data/dsmith/data_for_test/user.cdelitzs.45207441._000199.mltree_cluster_calo.root') as f:
         tree = f[tree_name]
         if args.step == "train":
             features = tree.arrays(feature_branches + [label_branch], library="ak")
         if args.step == "test":
             features = tree.arrays(feature_branches + [
-                                                        label_branch, 
+                                                        # label_branch, 
                                                         "eventNumber", "jetCnt",
                                                         "jetAreaE", "jetAreaPt",
                                                         "jetRawE", "jetRawPt",
-                                                        "truthJetE", "truthJetPt",
+                                                        # "truthJetE", "truthJetPt",
                                                         "jetCalE", "jetCalPt",
-                                                        "cluster_ENG_CALIB_TOT",
+                                                        # "cluster_ENG_CALIB_TOT",
                                                         "clusterPt",
                                                      ], 
                                     library="ak")
 
-    nclus = ak.to_numpy(ak.num(features["clusterE"]))
+    # nclus = ak.to_numpy(ak.num(features["clusterE"]))
+    nclus = ak.num(features["clusterE"], axis=0)
 
     X_list = []
     for feat in feature_branches:
-        X_list.append(ak.to_numpy(ak.flatten(features[feat])))
+        # X_list.append(ak.to_numpy(ak.flatten(features[feat])))
+        X_list.append(ak.to_numpy(features[feat]))
 
     X = np.stack(X_list, axis=1)
 
@@ -112,8 +123,9 @@ def main():
         raw_cluster_SECOND_TIME    = X[:, 11].copy()
         raw_cluster_SIGNIFICANCE   = X[:, 12].copy()
         raw_cluster_CENTER_MAG     = X[:, 4].copy()
-        cluster_ENG_CALIB_TOT      = ak.to_numpy(ak.flatten(features["cluster_ENG_CALIB_TOT"]))
-        clusterPt                  = ak.to_numpy(ak.flatten(features["clusterPt"]))
+        # cluster_ENG_CALIB_TOT      = ak.to_numpy(ak.flatten(features["cluster_ENG_CALIB_TOT"]))
+        # clusterPt                  = ak.to_numpy(ak.flatten(features["clusterPt"]))
+        clusterPt = ak.to_numpy(features["clusterPt"])
 
     #### Transform 
     ## clusterE
@@ -128,12 +140,14 @@ def main():
     X[:,12] = (apply_save_log(X[:,12]) - transform("cluster_SIGNIFICANCE")[0]) / transform("cluster_SIGNIFICANCE")[1]
     ## cluster_CENTER_MAG
     X[:,4] = (apply_save_log(X[:,4]) - transform("cluster_CENTER_MAG")[0]) / transform("cluster_CENTER_MAG")[1]
-    y = ak.to_numpy(ak.flatten(features[label_branch]))
+    # y = ak.to_numpy(ak.flatten(features[label_branch]))
+    # y = ak.to_numpy(features[label_branch])
 
 
     if args.step == "train":
         Xfinal = np.column_stack([y, X])
-        np.save("/data/jmsardain/CalibPU/datasets/pu/dataset_"+args.step+".npy", Xfinal)
+        # np.save("/data/jmsardain/CalibPU/datasets/pu/dataset_"+args.step+".npy", Xfinal)
+        np.save("/data/dsmith/data_for_test/dataset_"+args.step+".npy", Xfinal)
 
     if args.step == "test":
         ## add jet-level variables
@@ -152,13 +166,15 @@ def main():
         Xfinal = np.column_stack([
                                  eventNumber, jetCnt, 
                                  jetAreaE, jetAreaPt, 
-                                 jetRawE, jetRawPt, truthJetE, truthJetPt, jetCalE, jetCalPt, 
+                                 jetRawE, jetRawPt, #truthJetE, truthJetPt, 
+                                 jetCalE, jetCalPt, 
                                  cluster_ENG_CALIB_TOT,
                                  raw_clusterE, raw_cluster_CENTER_LAMBDA, raw_cluster_FIRST_ENG_DENS, raw_cluster_SECOND_TIME, raw_cluster_SIGNIFICANCE, raw_cluster_CENTER_MAG,
                                  clusterPt,
-                                 y, X
+                                 # y, 
+                                 X
                                  ])
-        np.save("/data/jmsardain/CalibPU/datasets/pu/dataset_"+args.step+".npy", Xfinal)
+        np.save("/data/dsmith/data_for_test/dataset_"+args.step+".npy", Xfinal)
 
     return
 

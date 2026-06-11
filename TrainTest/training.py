@@ -40,8 +40,15 @@ def main():
         print("{} already exists".format(dir_path))
     pass
 
-    path_to_train = '/data/jmsardain/CalibPU/datasets/pu/dataset_train.npy'
-    path_to_test  = '/data/jmsardain/CalibPU/datasets/pu/dataset_test.npy'
+    # path_to_train = '/data/jmsardain/CalibPU/datasets/pu/dataset_train.npy'
+    # path_to_test  = '/data/jmsardain/CalibPU/datasets/pu/dataset_test.npy'
+    # path_to_train = '/data/dsmith/data_for_test/user.cdelitzs.45207441._000199.mltree_cluster_calo.npy'
+    # path_to_test = '/data/dsmith/data_for_test/user.cdelitzs.45207441._000199.mltree_cluster_calo.npy'
+    path_to_train = '/data/dsmith/data_for_test/test_data.npy'
+    path_to_test = '/data/dsmith/data_for_test/test_data.npy'
+    # path_to_train = '/data/dsmith/mc_for_test/testfile.npy'
+    # path_to_test = '/data/dsmith/mc_for_test/testfile.npy'
+
 
 
     if args.train: 
@@ -123,8 +130,12 @@ def main():
             
         ] 
         dataset_test = np.load(path_to_test)
-        x_test = dataset_test[:, 19:]
+        print(dataset_test.shape)
+        # x_test = dataset_test[:, 19:]
+        x_test = dataset_test
+        print(x_test.shape)
         y_test = dataset_test[:, 18]
+        print(y_test.shape)
         data_test = np.concatenate([x_test, y_test[:, None]], axis=-1)
         print(f"Test dataset size {y_test.shape[0]}")
 
